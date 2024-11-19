@@ -479,7 +479,7 @@ endif()
 #
 
 if(ENABLE_OV_ONNX_FRONTEND)
-    find_package(ONNX 1.15.0 QUIET COMPONENTS onnx onnx_proto NO_MODULE)
+    find_package(ONNX QUIET COMPONENTS onnx onnx_proto NO_MODULE)
 
     if(ONNX_FOUND)
         # conan and vcpkg create imported targets 'onnx' and 'onnx_proto'
@@ -518,6 +518,7 @@ endif()
 # Install
 #
 
+if(ENABLE_SAMPLES OR ENABLE_TESTS)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gflags
         DESTINATION ${OV_CPACK_SAMPLESDIR}/cpp/thirdparty
         COMPONENT ${OV_CPACK_COMP_CPP_SAMPLES}
@@ -538,7 +539,9 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gflags
         PATTERN .travis.yml EXCLUDE
         PATTERN src/gflags_completions.sh EXCLUDE
         PATTERN WORKSPACE EXCLUDE)
+endif()
 
+if(ENABLE_SAMPLES)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/json/nlohmann_json
         DESTINATION ${OV_CPACK_SAMPLESDIR}/cpp/thirdparty
         COMPONENT ${OV_CPACK_COMP_CPP_SAMPLES}
@@ -563,6 +566,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/json/nlohmann_json
         PATTERN tools EXCLUDE
         PATTERN WORKSPACE.bazel EXCLUDE
         PATTERN wsjcpp.yml EXCLUDE)
+endif()
 
 # restore state
 

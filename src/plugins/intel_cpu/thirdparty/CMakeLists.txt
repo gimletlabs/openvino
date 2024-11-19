@@ -162,8 +162,8 @@ if (ENABLE_SNIPPETS_LIBXSMM_TPP)
 endif()
 
 if(ENABLE_MLAS_FOR_CPU)
-    add_subdirectory(mlas)
-    ov_install_static_lib(mlas ${OV_CPACK_COMP_CORE})
+    include_directories(${MLAS_INCLUDE_DIRS})
+    link_directories(${MLAS_LIBRARY_DIRS})
 endif()
 
 if(ENABLE_SHL_FOR_CPU)
@@ -171,4 +171,5 @@ if(ENABLE_SHL_FOR_CPU)
     ov_install_static_lib(shl ${OV_CPACK_COMP_CORE})
 endif()
 
-ov_add_onednn()
+include_directories(${DNNL_INCLUDE_DIRS})
+link_directories(${DNNL_LIBRARY_DIRS})

@@ -231,7 +231,7 @@ ov_libc_version()
 #
 macro(ov_get_glibcxx_use_cxx11_abi)
     if(LINUX AND OPENVINO_STDLIB STREQUAL "GNU")
-        ov_get_compiler_definition("_GLIBCXX_USE_CXX11_ABI" OV_GLIBCXX_USE_CXX11_ABI)
+        set(OV_GLIBCXX_USE_CXX11_ABI "1" PARENT_SCOPE)
     endif()
 endmacro()
 
