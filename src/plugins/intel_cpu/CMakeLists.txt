@@ -34,7 +34,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
     endif()
 endif()
 
-if(NOT BUILD_SHARED_LIBS)
+if((NOT BUILD_SHARED_LIBS) AND ENABLE_ONEDNN_FOR_GPU)
     # Symbols are located in both src and include folders
     file(GLOB_RECURSE onednn_files
         "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/onednn/include/*.cpp"
