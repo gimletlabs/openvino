@@ -310,6 +310,8 @@ void TransformationsPipeline::apply(std::shared_ptr<ov::Model> func) {
         if (!is_model_quantized)
             pass_config->set_callback<ov::pass::MarkDequantizationSubgraph>(is_non_supported_decompression_op);
 
+        manager.register_pass<ov::pass::CommonOptimizations>();
+
         const bool keep_precision_sensitive_in_fp32_1 = true;
         const bool convert_input_output_precision = false;
         const bool store_original_precision_as_rt_attribute = true;
@@ -318,8 +320,6 @@ void TransformationsPipeline::apply(std::shared_ptr<ov::Model> func) {
                                                           keep_precision_sensitive_in_fp32_1,
                                                           convert_input_output_precision,
                                                           store_original_precision_as_rt_attribute);
-
-        manager.register_pass<ov::pass::CommonOptimizations>();
 
         pass_config->set_callback<ov::pass::ScaledDotProductAttentionDecomposition>([&](const std::shared_ptr<const ov::Node> node){
             GPU_DEBUG_IF(cldnn::debug_configuration::get_instance()->enable_sdpa != -1) {
@@ -638,7 +638,7 @@ void TransformationsPipeline::apply(std::shared_ptr<ov::Model> func) {
 
         if (enableInt8) {
             pass_config->set_callback<ov::pass::ConvertQuantizeDequantize>([&](const_node_ptr &node) -> bool {
-                return ov::pass::low_precision::NetworkHelper::areQuantizeAndDequantizeSupportedForMultiply(node, defaultPrecisions);
+                return !ov::pass::low_precision::NetworkHelper::areQuantizeAndDequantizeSupportedForMultiply(node, defaultPrecisions);
             });
         }
 

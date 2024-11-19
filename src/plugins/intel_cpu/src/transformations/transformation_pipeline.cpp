@@ -665,7 +665,7 @@ void Transformations::PreLpt(const std::vector<ov::element::Type>& defaultPrecis
 
         CPU_SET_CALLBACK_COMMON(manager,
             [&defaultPrecisions](const_node_ptr &node) -> bool {
-                return ov::pass::low_precision::NetworkHelper::areQuantizeAndDequantizeSupportedForMultiply(node, defaultPrecisions);
+                return !ov::pass::low_precision::NetworkHelper::areQuantizeAndDequantizeSupportedForMultiply(node, defaultPrecisions);
             },
             ov::pass::ConvertQuantizeDequantize);
     }
