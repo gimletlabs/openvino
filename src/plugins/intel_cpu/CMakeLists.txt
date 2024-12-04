@@ -35,7 +35,8 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
 elseif (OV_COMPILER_IS_INTEL_LLVM AND WIN32)
     ov_add_compiler_flags("/Wno-microsoft-include")
 endif()
-if(NOT BUILD_SHARED_LIBS)
+
+if((NOT BUILD_SHARED_LIBS) AND ENABLE_ONEDNN_FOR_GPU)
     # Symbols are located in both src and include folders
     file(GLOB_RECURSE onednn_files
         "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/onednn/include/*.cpp"
@@ -260,7 +261,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE dnnl
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 if (ENABLE_MLAS_FOR_CPU)
     target_link_libraries(${TARGET_NAME} PRIVATE mlas)
-    target_include_directories(${TARGET_NAME} SYSTEM PRIVATE $<TARGET_PROPERTY:mlas,INCLUDE_DIRECTORIES>)
+    target_include_directories(${TARGET_NAME} SYSTEM PRIVATE ${MLAS_INCLUDE_DIRS})
     add_definitions(-DOV_CPU_WITH_MLAS)
 endif()
 if (ENABLE_SNIPPETS_LIBXSMM_TPP)
@@ -271,7 +272,7 @@ endif ()
 if(ENABLE_SHL_FOR_CPU)
     target_link_libraries(${TARGET_NAME} PRIVATE shl)
 endif()
-target_include_directories(${TARGET_NAME} SYSTEM PRIVATE $<TARGET_PROPERTY:dnnl,INCLUDE_DIRECTORIES>)
+target_include_directories(${TARGET_NAME} SYSTEM PRIVATE ${DNNL_INCLUDE_DIRS})
 
 # Temporal solution to use template reference implementations in cases where optimizied implementation
 # is not (yet) needed.
