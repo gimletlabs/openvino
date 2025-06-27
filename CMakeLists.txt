@@ -164,7 +164,6 @@ if(ENABLE_TESTS OR ENABLE_TEMPLATE)
 endif()
 
 include(cmake/extra_modules.cmake)
-add_subdirectory(docs)
 add_subdirectory(tools)
 add_subdirectory(scripts)
 add_subdirectory(licensing)
