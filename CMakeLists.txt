@@ -158,10 +158,6 @@ endif()
 include(thirdparty/dependencies.cmake)
 add_subdirectory(src)
 
-if(ENABLE_SAMPLES OR ENABLE_TESTS)
-    add_subdirectory(samples)
-endif()
-
 # Enable interpreter backend for tests
 if(ENABLE_TESTS OR ENABLE_TEMPLATE)
     add_subdirectory(src/plugins/template/backend)
