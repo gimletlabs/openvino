@@ -26,22 +26,24 @@ ov::pass::LoraSubgraphFusion::LoraSubgraphFusion() {
     using namespace pass::pattern;
     auto lora_input_m = any_input();
     auto transpose_const1_m = wrap_type<ov::op::v0::Constant>(consumers_count(1));
-    auto transpose1_m = optional<ov::op::v1::Transpose>({lora_input_m, transpose_const1_m}, consumers_count(1));
+    auto transpose1_m =
+        ov::pass::pattern::optional<ov::op::v1::Transpose>({lora_input_m, transpose_const1_m}, consumers_count(1));
 
     auto read_value1_m = wrap_type<ov::op::util::ReadValueBase>();
-    auto convert1_m = optional<ov::op::v0::Convert>(read_value1_m, consumers_count(1));
+    auto convert1_m = ov::pass::pattern::optional<ov::op::v0::Convert>(read_value1_m, consumers_count(1));
     auto matmul1_m = wrap_type<ov::op::v0::MatMul>({transpose1_m, convert1_m}, consumers_count(1));
 
     auto read_value2_m = wrap_type<ov::op::util::ReadValueBase>();
-    auto convert2_m = optional<ov::op::v0::Convert>(read_value2_m, consumers_count(1));
+    auto convert2_m = ov::pass::pattern::optional<ov::op::v0::Convert>(read_value2_m, consumers_count(1));
     auto multiply_m = wrap_type<ov::op::v1::Multiply>({matmul1_m, convert2_m}, consumers_count(1));
 
     auto read_value3_m = wrap_type<ov::op::util::ReadValueBase>();
-    auto convert3_m = optional<ov::op::v0::Convert>(read_value3_m, consumers_count(1));
+    auto convert3_m = ov::pass::pattern::optional<ov::op::v0::Convert>(read_value3_m, consumers_count(1));
     auto matmul2_m = wrap_type<ov::op::v0::MatMul>({multiply_m, convert3_m}, consumers_count(1));
 
     auto transpose_const2_m = wrap_type<ov::op::v0::Constant>(consumers_count(1));
-    auto transpose2_m = optional<ov::op::v1::Transpose>({matmul2_m, transpose_const2_m}, consumers_count(1));
+    auto transpose2_m =
+        ov::pass::pattern::optional<ov::op::v1::Transpose>({matmul2_m, transpose_const2_m}, consumers_count(1));
     auto main_flow_m = wrap_type<ov::op::v0::MatMul, ov::op::v1::Convolution>({lora_input_m, any_input()});
     auto add_m = wrap_type<ov::op::v1::Add>({transpose2_m, main_flow_m});
 
